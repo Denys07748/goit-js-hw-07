@@ -33,15 +33,21 @@ function onImageClick(evt) {
     return;
   }
 
-  const instance = basicLightbox.create(`
+  const instance = basicLightbox.create(
+    `
         <img src="${evt.target.dataset.source}"/>
-    `);
+    `,
+    {
+      onShow: () => document.addEventListener("keydown", onEscClose),
+      onClose: () => document.removeEventListener("keydown", onEscClose),
+    }
+  );
 
-  galleryContainerEl.addEventListener("keydown", (evt) => {
-    if (evt.code === "Escape" && basicLightbox.visible()) {
+  function onEscClose(e) {
+    if (e.code === "Escape" && basicLightbox.visible()) {
       instance.close();
     }
-  });
+  }
 
   instance.show();
 }
